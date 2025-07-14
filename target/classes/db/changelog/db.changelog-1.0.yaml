@@ -1,0 +1,245 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: set
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(60)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(72)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: NOW()
+
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: role_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(60)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - createTable:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: users(user_id)
+                    foreignKeyName: fk_users_roles_user
+                    deleteCascade: true
+              - column:
+                  name: role_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: roles(role_id)
+                    foreignKeyName: fk_users_roles_role
+                    deleteCascade: true
+            constraints:
+              primaryKey:
+                columnNames: user_id, role_id
+                constraintName: pk_users_roles
+
+        - sql:
+            sql: CREATE TYPE card_status AS ENUM ('NOT_ACTIVE', 'ACTIVE', 'BLOCKED', 'EXPIRED')
+            splitStatements: false
+            stripComments: false
+
+        - createTable:
+            tableName: cards
+            columns:
+              - column:
+                  name: card_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_number
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: expiration_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: decimal(15, 2)
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: holder_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: users(user_id)
+                    foreignKeyName: fk_cards_user
+                    deleteCascade: true
+              - column:
+                  name: status
+                  type: card_status
+                  defaultValue: "NOT_ACTIVE"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: NOW()
+
+        - createTable:
+            tableName: transfers
+            columns:
+              - column:
+                  name: transfer_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_from_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: cards(card_id)
+                    foreignKeyName: fk_transfers_card_from
+              - column:
+                  name: card_to_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: cards(card_id)
+                    foreignKeyName: fk_transfers_card_to
+              - column:
+                  name: amount
+                  type: decimal(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: holder_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: users(user_id)
+                    foreignKeyName: fk_transfers_user
+                    deleteCascade: true
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: NOW()
+            constraints:
+              check:
+                constraintName: chk_transfer_cards_different
+                condition: card_from_id <> card_to_id
+
+        - createIndex:
+            indexName: idx_cards_holder
+            tableName: cards
+            columns:
+              - column:
+                  name: holder_id
+
+        - createIndex:
+            indexName: idx_cards_status
+            tableName: cards
+            columns:
+              - column:
+                  name: status
+
+        - createIndex:
+            indexName: idx_transfers_created
+            tableName: transfers
+            columns:
+              - column:
+                  name: created_at
+
+        - createIndex:
+            indexName: idx_transfers_card_from
+            tableName: transfers
+            columns:
+              - column:
+                  name: card_from_id
+
+        - createIndex:
+            indexName: idx_transfers_card_to
+            tableName: transfers
+            columns:
+              - column:
+                  name: card_to_id
+
+  - changeSet:
+      id: 2
+      author: set
+      changes:
+        - sql:
+            sql: CREATE TYPE block_request_status AS ENUM ('PENDING', 'DECLINED', 'ACCEPTED')
+            splitStatements: false
+            stripComments: false
+
+        - createTable:
+            tableName: card_block_requests
+            columns:
+              - column:
+                  name: block_request_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    references: cards(card_id)
+                    foreignKeyName: fk_block_requests_card
+              - column:
+                  name: status
+                  type: block_request_status
+                  defaultValue: "PENDING"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cause
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: NOW()
