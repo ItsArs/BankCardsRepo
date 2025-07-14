@@ -1,0 +1,29 @@
+spring:
+  liquibase:
+    enabled: true
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bank-card-db
+    username: postgres
+    password: 23111
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+  application:
+    name: Bank_REST-API
+
+jwt:
+  lifetime: 30m
+  secret: 90384fj304jf09j09fj3409fj3094fj9sjfP3dj8DDikSDJ39dJD39d3jdd
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+
+

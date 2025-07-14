@@ -1,0 +1,142 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: set
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_ADMIN
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_USER
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: Admin
+              - column:
+                  name: password
+                  value: $2a$10$vhrJypM7yCr8jXw7dpdVguHHTaGYVxkuB2yHl/GltQ4Uwzh31dJDK
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: John
+              - column:
+                  name: password
+                  value: $2a$10$In1RecwzakTw4ZtamA9qQOWT7bVN4BzuvmJCeQnImUlr5nCo.I7gS
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: role_id
+                  value: 1
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: role_id
+                  value: 2
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: role_id
+                  value: 2
+
+        - insert:
+            tableName: cards
+            columns:
+              - column:
+                  name: card_number
+                  value: 1809-2087-4216-1362
+              - column:
+                  name: expiration_date
+                  value: 2030-07-11
+              - column:
+                  name: balance
+                  value: 400.00
+              - column:
+                  name: holder_id
+                  value: 2
+              - column:
+                  name: status
+                  value: ACTIVE
+        - insert:
+            tableName: cards
+            columns:
+              - column:
+                  name: card_number
+                  value: 9440-1082-3796-8933
+              - column:
+                  name: expiration_date
+                  value: 2030-07-11
+              - column:
+                  name: balance
+                  value: 600.00
+              - column:
+                  name: holder_id
+                  value: 2
+              - column:
+                  name: status
+                  value: ACTIVE
+
+        - insert:
+            tableName: transfers
+            columns:
+              - column:
+                  name: card_from_id
+                  value: 1
+              - column:
+                  name: card_to_id
+                  value: 2
+              - column:
+                  name: amount
+                  value: 600.00
+              - column:
+                  name: holder_id
+                  value: 2
+
+        - insert:
+            tableName: card_block_requests
+            columns:
+              - column:
+                  name: card_id
+                  value: 1
+              - column:
+                  name: status
+                  value: DECLINED
+              - column:
+                  name: cause
+                  value: Can't find it in a while, I think I lost it!
+        - insert:
+            tableName: card_block_requests
+            columns:
+              - column:
+                  name: card_id
+                  value: 2
+              - column:
+                  name: status
+                  value: PENDING
+              - column:
+                  name: cause
+                  value: I do not use this card. I do not need it any more.
