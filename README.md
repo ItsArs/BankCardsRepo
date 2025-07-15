@@ -14,6 +14,7 @@ docker-compose up -d
 docker-compose down
 
 
-Swagger UI: http://localhost:8080/swagger-ui.html
-Тестовый админ: 'Admin':'admin'
-Тестовый юзер:  'NewUser':'NewUser'
+# Swagger UI
+ url: http://localhost:8080/swagger-ui.html
+- Тестовый админ: 'Admin':'admin'
+- Тестовый юзер:  'NewUser':'NewUser'
