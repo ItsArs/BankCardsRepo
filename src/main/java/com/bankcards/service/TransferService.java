@@ -48,7 +48,7 @@ public class TransferService {
             throw new TransferCardNotActiveException(cardFrom.getStatus().name() + " - " + cardTo.getStatus().name());
         }
         cardFrom.setBalance((cardFrom.getBalance().subtract(transferDto.getAmount())));
-        cardTo.setBalance(cardTo.getBalance().subtract(transferDto.getAmount()));
+        cardTo.setBalance(cardTo.getBalance().add(transferDto.getAmount()));
 
         cardService.updateCardBalance(transferDto.getFromCardId(), cardFrom.getBalance());
         cardService.updateCardBalance(transferDto.getToCardId(), cardTo.getBalance());

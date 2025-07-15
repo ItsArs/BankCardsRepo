@@ -1,10 +1,7 @@
 package com.bankcards.service;
 
 
-import com.bankcards.dto.BlockRequestConclusion;
-import com.bankcards.dto.CardBlockRequestDto;
-import com.bankcards.dto.CardCreateRequest;
-import com.bankcards.dto.CardDto;
+import com.bankcards.dto.*;
 import com.bankcards.entity.Card;
 import com.bankcards.entity.CardBlockRequest;
 import com.bankcards.exception.BlockRequestNotFoundException;
@@ -60,8 +57,7 @@ public class CardService {
 
         return new ResponseEntity<>(cardRepository.findAllByHolderId(id, pageable)
                 .map(c -> modelMapper.map(c, CardDto.class))
-                .map(this::maskCardNumberOnDto)
-                .toList(), HttpStatus.OK);
+                .map(this::maskCardNumberOnDto), HttpStatus.OK);
     }
 
     public CardDto maskCardNumberOnDto(CardDto cardDto) {
@@ -136,7 +132,12 @@ public class CardService {
     }
 
     public ResponseEntity<?> findAllPendingBlockRequests(Pageable pageable) {
-        return new ResponseEntity<>(blockRequestRepository.findAllByStatusEquals(CardBlockRequest.BlockRequestStatus.PENDING, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(blockRequestRepository.findAllByStatusEquals(CardBlockRequest.BlockRequestStatus.PENDING, pageable).stream()
+                .map(o -> {
+                    CardBlockRequestAdminDto newO = modelMapper.map(o, CardBlockRequestAdminDto.class);
+                    newO.setCardId(o.getCard().getId());
+                    return newO;
+                }), HttpStatus.OK);
     }
 
     @Transactional

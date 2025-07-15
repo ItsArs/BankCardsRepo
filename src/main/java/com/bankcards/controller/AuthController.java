@@ -16,20 +16,20 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
 
-    @GetMapping("/token")
+    @PostMapping("/token")
     public ResponseEntity<?> authAndGetToken(@RequestBody AuthRequest authRequest) {
         return authService.createToken(authRequest);
     }
 
     @PostMapping("/registration")
-    public HttpEntity<?> registration(@Valid @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> registration(@Valid @RequestBody AuthRequest authRequest) {
         return userService.create(authRequest);
     }
 }

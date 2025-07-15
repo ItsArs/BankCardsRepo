@@ -1,0 +1,588 @@
+openapi: 3.1.0
+info:
+  title: Bankcards API
+  version: "1.0"
+servers:
+- url: http://localhost:8080
+  description: Localhost
+paths:
+  /api/transfer:
+    post:
+      tags:
+      - transfer-controller
+      operationId: transfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/card/block-request/create:
+    post:
+      tags:
+      - card-controller
+      operationId: requestBlockCard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardBlockRequestDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/auth/registration:
+    post:
+      tags:
+      - auth-controller
+      operationId: registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/admin/card/create:
+    post:
+      tags:
+      - card-admin-controller
+      operationId: createNewCard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardCreateRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/admin/user/{id}:
+    get:
+      tags:
+      - user-controller
+      operationId: getUserById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDto"
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - user-controller
+      operationId: deleteUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - user-controller
+      operationId: updateUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/admin/card/{id}:
+    delete:
+      tags:
+      - card-admin-controller
+      operationId: deleteCard
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - card-admin-controller
+      operationId: updateCard
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/admin/card/{id}/block:
+    patch:
+      tags:
+      - card-admin-controller
+      operationId: blockCard
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/admin/card/{id}/activate:
+    patch:
+      tags:
+      - card-admin-controller
+      operationId: activateCard
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/admin/card/block-request/response:
+    patch:
+      tags:
+      - card-admin-controller
+      operationId: blockRequestConclusion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlockRequestConclusion"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/card/balance/{id}:
+    get:
+      tags:
+      - card-controller
+      operationId: balance
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: number
+      security:
+      - BearerAuth: []
+  /api/card/all:
+    get:
+      tags:
+      - card-controller
+      operationId: getAllMyCards
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/auth/token:
+    post:
+      tags:
+      - auth-controller
+      operationId: authAndGetToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/admin/user/all:
+    get:
+      tags:
+      - user-controller
+      operationId: getAllUsers
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserDto"
+      security:
+      - BearerAuth: []
+  /api/admin/card/block-request/pending:
+    get:
+      tags:
+      - card-admin-controller
+      operationId: findAllPendingBlockRequests
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/admin/card/block-request/all:
+    get:
+      tags:
+      - card-admin-controller
+      operationId: findAllBlockRequests
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+      security:
+      - BearerAuth: []
+  /api/admin/card/all:
+    get:
+      tags:
+      - card-admin-controller
+      operationId: getAllCards
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageCardDto"
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    TransferRequest:
+      type: object
+      properties:
+        fromCardId:
+          type: integer
+          format: int64
+          minimum: 0
+        toCardId:
+          type: integer
+          format: int64
+          minimum: 0
+        amount:
+          type: number
+          minimum: 0
+      required:
+      - amount
+      - fromCardId
+      - toCardId
+    CardBlockRequestDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+        cause:
+          type: string
+          maxLength: 128
+          minLength: 4
+      required:
+      - cause
+      - id
+    AuthRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 60
+          minLength: 2
+          pattern: "[a-zA-Z]{2,60}"
+        password:
+          type: string
+          maxLength: 60
+          minLength: 4
+      required:
+      - name
+      - password
+    CardCreateRequest:
+      type: object
+      properties:
+        holderId:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - holderId
+    UserDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 60
+          minLength: 2
+      required:
+      - name
+    CardDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+        cardNumber:
+          type: string
+          pattern: "[\\d*]{4}[-][\\d*]{4}[-][\\d*]{4}[-][\\d*]{4}"
+        expirationDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+          - NOT_ACTIVE
+          - ACTIVE
+          - BLOCKED
+          - EXPIRED
+        balance:
+          type: number
+          minimum: 0
+        holderId:
+          type: integer
+          format: int64
+          minimum: 0
+    BlockRequestConclusion:
+      type: object
+      properties:
+        blockRequestId:
+          type: integer
+          format: int64
+          minimum: 0
+        status:
+          type: string
+          enum:
+          - PENDING
+          - DECLINED
+          - ACCEPTED
+      required:
+      - blockRequestId
+      - status
+    Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+        sort:
+          type: array
+          items:
+            type: string
+    PageCardDto:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardDto"
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: Jwt spring security
+      in: header
+      scheme: bearer
+      bearerFormat: JWT

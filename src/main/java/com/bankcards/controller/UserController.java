@@ -2,6 +2,7 @@ package com.bankcards.controller;
 
 import com.bankcards.dto.UserDto;
 import com.bankcards.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -13,34 +14,32 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/admin/user")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
+@SecurityRequirement(name = "BearerAuth")
 public class UserController {
 
     private final UserService userService;
 
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
-    public HttpEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public HttpEntity<UserDto> getUserById(@PathVariable long id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable long id) {
         return userService.getUserById(id);
     }
 
-    @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public HttpEntity<?> updateUser(@PathVariable long id, @RequestBody UserDto userDto) {
-        return userService.update(id, userDto);
+    @PatchMapping()
+    public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
+        return userService.update( userDto);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public HttpEntity<?> deleteUser(@PathVariable long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable long id) {
         return userService.delete(id);
     }
 

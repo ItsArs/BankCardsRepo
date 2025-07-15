@@ -50,8 +50,8 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<?> update(long id, UserDto userDto) {
-        userRepository.findById(id).orElseThrow(() -> new UserIdNotFoundException(id));
+    public ResponseEntity<?> update(UserDto userDto) {
+        userRepository.findById(userDto.getId()).orElseThrow(() -> new UserIdNotFoundException(userDto.getId()));
         userRepository.save(modelMapper.map(userDto, User.class));
         return new ResponseEntity<>("User updated!",HttpStatus.OK);
 

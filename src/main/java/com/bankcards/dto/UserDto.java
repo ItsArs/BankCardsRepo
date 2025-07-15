@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @NoArgsConstructor
 public class UserDto {
 
+    private long id;
+
     @NotNull(message = "Name can not be null")
     @Size(min = 2, max = 60, message = "Name should be sized between 2 and 60 characters")
     private String name;
